@@ -1,4 +1,3 @@
-import multiprocessing
 import time
 from hashlib import sha256
 from concurrent.futures import ProcessPoolExecutor, as_completed
@@ -36,12 +35,13 @@ def span() -> list:
         ranges.append((start, end))
     return ranges
 
-def search_range(start: int, end: int, targets: int) -> list :
+def search_range(start: int, end: int, targets: set) -> list :
     result = []
     for i in range(start, end):
         value = f"{i:08d}"
         pas = sha256_hash_str(str(value))
         if pas in targets:
+            print(value)
             result.append(value)
     return result
 
@@ -56,8 +56,8 @@ def brute_force_password() -> None:
         for task in as_completed(futures):
             found = task.result()
             if found:
-                results.append(found)
-    print(results)
+                results.extend(found)
+        print(results)
 
 
 if __name__ == "__main__":
